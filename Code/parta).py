@@ -8,9 +8,9 @@ import os
 
 np.random.seed(2014)
 
-n = 100 #number of data points
+n = 400 #number of data points
 x = np.random.rand(n,1) #input
-y = 2 + 3*x + 4*x**2 + 0.1*np.random.randn(n,1) #4x^2 + 3x + 2 + noise, easy one-dimensional polynomial
+y = 2 + 3*x + 4*x**2 + 0.1*np.random.randn(n,1) #4x^2 + 3x + 2 + noise
 
 p = 2 #polynomial degree 
 
@@ -50,21 +50,21 @@ def plotHeatmapGD():
     yticks = [f"$10^{{{int(np.log10(val))}}}$" for val in lr]
 
     fig1, ax = plt.subplots(layout='constrained', figsize=(13,11))
-    heatmap_mse = sns.heatmap(mse, annot=True, cmap="YlOrRd",yticklabels=yticks,xticklabels=xticks, vmin = 0 ,annot_kws={"fontsize":22} ,ax=ax)
+    heatmap_mse = sns.heatmap(mse, annot=True, cmap="YlGnBu",yticklabels=yticks,xticklabels=xticks, vmin = 0 ,annot_kws={"fontsize":22} ,ax=ax)
 
     cbar_mse = heatmap_mse.collections[0].colorbar
     cbar_mse.ax.tick_params(labelsize=19)  # Adjust font size of colorbar ticks
     cbar_mse.set_label('MSE', fontsize=19)
 
     ax.tick_params(left=False, bottom=False)
-    ax.set_title("Accuracy")
+    ax.set_title("Accuracy, GD")
     ax.set_ylabel("$\eta$",fontsize=19)
     ax.set_xlabel("$\lambda$",fontsize=19)
     ax.tick_params(axis='both', which='major', labelsize=19)
     
 
     fig2, ax = plt.subplots(layout='constrained', figsize=(13,11))
-    heatmap_r2 = sns.heatmap(r2, annot=True, cmap="YlOrRd_r",yticklabels=yticks, xticklabels=xticks, vmax = 1 ,annot_kws={"fontsize":22}, ax=ax)
+    heatmap_r2 = sns.heatmap(r2, annot=True, cmap="YlGnBu",yticklabels=yticks, xticklabels=xticks, vmax = 1 ,annot_kws={"fontsize":22}, ax=ax)
 
     cbar_r2 = heatmap_r2.collections[0].colorbar
     cbar_r2.ax.tick_params(labelsize=19)  # Adjust font size of colorbar ticks
@@ -90,7 +90,7 @@ def plotHeatmapSGD():
     min = 100
     for i in range(len(lr)):
         for j in range(len(lmbda)):
-            beta_gd = SGD(X,y,beta,25,40,lr[i],lmbda[j],gamma=0)
+            beta_gd = SGD(X,y,beta,20,80,lr[i],lmbda[j],gamma=0)
             print(f"lr={lr[i]}, lmbda={lmbda[j]}")
             print(beta_gd)
             print()
@@ -108,7 +108,7 @@ def plotHeatmapSGD():
     yticks = [f"$10^{{{int(np.log10(val))}}}$" for val in lr]
 
     fig1, ax = plt.subplots(layout='constrained', figsize=(13,11))
-    heatmap_mse = sns.heatmap(mse, annot=True, cmap="YlOrRd",yticklabels=yticks,xticklabels=xticks, vmin = 0 ,annot_kws={"fontsize":22} ,ax=ax)
+    heatmap_mse = sns.heatmap(mse, annot=True, cmap="YlGnBu",yticklabels=yticks,xticklabels=xticks, vmin = 0 ,annot_kws={"fontsize":22} ,ax=ax)
 
     cbar_mse = heatmap_mse.collections[0].colorbar
     cbar_mse.ax.tick_params(labelsize=19)  # Adjust font size of colorbar ticks
@@ -122,14 +122,14 @@ def plotHeatmapSGD():
     
 
     fig2, ax = plt.subplots(layout='constrained', figsize=(13,11))
-    heatmap_r2 = sns.heatmap(r2, annot=True, cmap="YlOrRd_r",yticklabels=yticks, xticklabels=xticks, vmax = 1 ,annot_kws={"fontsize":22}, ax=ax)
+    heatmap_r2 = sns.heatmap(r2, annot=True, cmap="YlGnBu",yticklabels=yticks, xticklabels=xticks, vmax = 1 ,annot_kws={"fontsize":22}, ax=ax)
 
     cbar_r2 = heatmap_r2.collections[0].colorbar
     cbar_r2.ax.tick_params(labelsize=19)  # Adjust font size of colorbar ticks
     cbar_r2.set_label("$R^2$", fontsize=19)
 
     ax.tick_params(left=False, bottom=False)
-    ax.set_title("Accuracy")
+    ax.set_title("Accuracy, SGD")
     ax.set_ylabel("$\eta$",fontsize=19)
     ax.set_xlabel("$\lambda$",fontsize=19)
     ax.tick_params(axis='both', which='major', labelsize=19)
@@ -152,7 +152,7 @@ def plothHeatmapSGDepochsbatches():
     j=0
     for epochs in nepochs:
         for batches in nbatches:
-            beta_gd = SGD(X,y,beta,epochs,batches,0.1,0,gamma=0) #This one is changed to analytical gradient due to time usage
+            beta_gd = SGD(X,y,beta,epochs,batches,0.1,0,gamma=0)
             print(f"nepochs={epochs}, nbatches={batches}")
             print(beta_gd)
             print()
@@ -174,14 +174,14 @@ def plothHeatmapSGDepochsbatches():
     
     fig, ax = plt.subplots(layout='constrained', figsize=(13,11))
 
-    heatmap_eb = sns.heatmap(mse, annot=True, cmap="YlOrRd",yticklabels=yticks,xticklabels=xticks, annot_kws={"fontsize":22} ,ax=ax)
+    heatmap_eb = sns.heatmap(mse, annot=True, cmap="YlGnBu",yticklabels=yticks,xticklabels=xticks, annot_kws={"fontsize":22} ,ax=ax)
 
     cbar_eb = heatmap_eb.collections[0].colorbar
     cbar_eb.ax.tick_params(labelsize=19)  # Adjust font size of colorbar ticks
     cbar_eb.set_label('MSE', fontsize=19)
 
     ax.tick_params(left=False, bottom=False)
-    ax.set_title("Accuracy",fontsize=19)
+    ax.set_title("Accuracy, SGD",fontsize=19)
     ax.set_ylabel("Epochs",fontsize=19)
     ax.set_xlabel("Batches",fontsize=19)
     ax.tick_params(axis='both', which='major', labelsize=19)
@@ -230,7 +230,7 @@ def plotGraphs():
 
     y_OLS = X@OLS(X,y)
     y_ridge = X@Ridge(X,y,1e-5)
-    y_gd = X@GD(X,y,beta,2000,eta=0.1)
+    y_gd = X@GD_ADAM(X,y,beta,2000,eta=3)
     y_sgd = X@SGD(X,y,beta,20,80,eta=0.1,gamma=0)
 
     plt.style.use('seaborn-v0_8')
@@ -239,7 +239,7 @@ def plotGraphs():
     ax.plot(xn,yn,label="f(x)",color='red')
     ax.scatter(x,y_OLS,label="OLS",s=50,color='orange')
     ax.scatter(x,y_ridge,label="Ridge",s=50,color="purple")
-    ax.scatter(x,y_gd,label="GD - plain",s=50,color='yellow')
+    ax.scatter(x,y_gd,label="GD - Adam",s=50,color='yellow')
     ax.scatter(x,y_sgd,label="SGD - plain",s=50,color='blue')
     ax.set_xlabel("x",fontsize=28)
     ax.set_ylabel("y",fontsize=28)
@@ -247,33 +247,43 @@ def plotGraphs():
     ax.legend(fontsize=28)
     plt.show()
 
-"""
+
 plotHeatmapGD()
+
+"""
 momentumGD()
 
 print("MSE for GD_Adagrad, momentum=0:", MSE(y,X@GD_Adagrad(X,y,beta,2000,eta=5,gamma=0)))
 print("MSE for GD_Adagrad, momentum=0.9:",MSE(y,X@GD_Adagrad(X,y,beta,2000,eta=5,gamma=0.9)))
 
 print("MSE for GD_RMSprop, momentum=0:",MSE(y,X@GD_RMSprop(X,y,beta,1500,eta=0.01,gamma=0)))
-print("MSE for GD_RMSprop, momentum=0.8:",MSE(y,X@GD_RMSprop(X,y,beta,2000,eta=0.01,gamma=0.8)))
+print("MSE for GD_RMSprop, momentum=0.6:",MSE(y,X@GD_RMSprop(X,y,beta,2000,eta=0.01,gamma=0.6)))
 
-print("MSE for GD_Adam",MSE(y,X@GD_ADAM(X,y,beta,2000,eta=5))) 
+
+print("MSE for GD_Adam",MSE(y,X@GD_ADAM(X,y,beta,2000,eta=3))) 
+
+
+#Tested for different eta, and for Adagrad eta is best at: 5, RMSprop eta = 0.01, Adam eta = 3
+#Tested for different gamma: Adagrad gamma = 0.9, RMSprop gamma = 0.6, none for Adam since momentum is baked into code
 """
 
-"""
 plotHeatmapSGD()
+
 plothHeatmapSGDepochsbatches()
+
+"""
 momentumSGD()
-
-
+"""
+"""
 print("MSE for SGD_Adagrad, momentum=0:", MSE(y,X@SGD_Adagrad(X,y,beta,20,80,eta=1,gamma=0)))
-print("MSE for SGD_Adagrad, momentum=0.7:", MSE(y,X@SGD_Adagrad(X,y,beta,20,80,eta=1,gamma=0.7)))
+print("MSE for SGD_Adagrad, momentum=0.7:", MSE(y,X@SGD_Adagrad(X,y,beta,20,80,eta=1,gamma=0.9)))
 
 print("MSE for SGD_RMSprop, momentum=0:", MSE(y,X@SGD_RMSprop(X,y,beta,20,80,eta=0.01)))
-print("MSE for SGD_RMSprop, momentum=0.7:",MSE(y,X@SGD_RMSprop(X,y,beta,20,80,eta=0.001,gamma=0.7)))
+print("MSE for SGD_RMSprop, momentum=0.7:",MSE(y,X@SGD_RMSprop(X,y,beta,20,80,eta=0.01,gamma=0.7)))
 
 print("MSE for SGD_Adam:",MSE(y,X@SGD_ADAM(X,y,beta,20,80,eta=0.1)))
 """
+
 
 
 print("MSE for OLS:", MSE(y,X@OLS(X,y)))

@@ -5,6 +5,7 @@ import sklearn.linear_model as skl
 from sklearn.model_selection import train_test_split
 from random import random, seed
 
+
 def Design(x,degree):
     X = np.zeros((len(x[:,0]),degree+1))
     for i in range(degree+1):
