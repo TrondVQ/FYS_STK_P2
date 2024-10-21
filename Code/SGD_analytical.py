@@ -46,8 +46,8 @@ def SGD(X,y,betainit,nepochs,nbatches,eta,lmbda=0,gamma=0):
                 M = len(yk)
             
                 g = (2.0/M)*xk.T @ (xk @ (beta)-yk)+2*lmbda*beta
-                v = gamma*v-eta*g
-                beta += v
+                v = gamma*v+eta*g
+                beta -= v
                 
     print(f"Stopped after {nepochs} epochs")
     return beta
@@ -104,8 +104,8 @@ def SGD_Adagrad(X,y,betainit,nepochs,nbatches,eta,delta=1e-7,lmbda=0,gamma=0):
             
                 g = (2.0/M)*xk.T @ (xk @ (beta)-yk)+2*lmbda*beta
                 r += g*g
-                v = gamma*v-(eta/(delta+np.sqrt(r)))*g
-                beta += v
+                v = gamma*v+(eta/(delta+np.sqrt(r)))*g
+                beta -= v
     
 
     print(f"Stopped after {nepochs} epochs")
@@ -166,8 +166,8 @@ def SGD_RMSprop(X,y,betainit,nepochs,nbatches,eta,rho=0.9,delta=1e-7,lmbda=0,gam
             
                 g = (2.0/M)*xk.T @ (xk @ (beta)-yk)+2*lmbda*beta
                 r = rho*r+(1-rho)*g*g
-                v = gamma*v-(eta/(np.sqrt(delta+r)))*g
-                beta += v
+                v = gamma*v+(eta/(np.sqrt(delta+r)))*g
+                beta -= v
     
 
     print(f"Stopped after {nepochs} epochs")
@@ -238,8 +238,8 @@ def SGD_ADAM(X,y,betainit,nepochs,nbatches,eta=0.001,rho1=0.9,rho2=0.999,delta=1
                 shat = s/(1-rho1**(t))
                 rhat = r/(1-rho2**(t))
                 
-                v = -eta*(shat/(delta+np.sqrt(rhat)))
-                beta += v
+                v = eta*(shat/(delta+np.sqrt(rhat)))
+                beta -= v
     
 
     print(f"Stopped after {nepochs} epochs")
