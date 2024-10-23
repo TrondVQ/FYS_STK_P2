@@ -6,9 +6,8 @@ from SGD_automatic import *
 import seaborn as sns
 
 """
-To use automatic differentiation (JAX), just write _auto behind the GD and SGD functions.
+To use automatic differentiation (Autograd), just write _auto behind the GD and SGD functions.
 Ex. instead of GD in def plotHeatmapGD(), write GD_auto etc.
-PS. the automatic differentiation takes a long time, so now we have analytical functions in this code.
 """
 
 

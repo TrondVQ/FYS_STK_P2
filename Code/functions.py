@@ -4,7 +4,8 @@ from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 import sklearn.linear_model as skl
 from sklearn.model_selection import train_test_split
 from random import random, seed
-from jax import grad
+import autograd.numpy as np
+from autograd import grad
 
 
 def Design(x,degree):
