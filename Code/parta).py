@@ -1,9 +1,15 @@
 from functions import *
 from GD_analytical import *
 from SGD_analytical import *
+from GD_automatic import *
+from SGD_automatic import *
 import seaborn as sns
-from autograd import grad
-import os
+
+"""
+To use automatic differentiation (JAX), just write _auto behind the GD and SGD functions.
+Ex. instead of GD in def plotHeatmapGD(), write GD_auto etc.
+PS. the automatic differentiation takes a long time, so now we have analytical functions in this code.
+"""
 
 
 np.random.seed(2014)
@@ -250,27 +256,26 @@ def plotGraphs():
 
 plotHeatmapGD()
 
-"""
+
 momentumGD()
 
 print("MSE for GD_Adagrad, momentum=0:", MSE(y,X@GD_Adagrad(X,y,beta,2000,eta=5,gamma=0)))
 print("MSE for GD_Adagrad, momentum=0.9:",MSE(y,X@GD_Adagrad(X,y,beta,2000,eta=5,gamma=0.9)))
 
-print("MSE for GD_RMSprop, momentum=0:",MSE(y,X@GD_RMSprop(X,y,beta,1500,eta=0.01,gamma=0)))
-print("MSE for GD_RMSprop, momentum=0.6:",MSE(y,X@GD_RMSprop(X,y,beta,2000,eta=0.01,gamma=0.6)))
+print("MSE for GD_RMSprop, momentum=0:",MSE(y,X@GD_RMSprop(X,y,beta,2000,eta=0.01,gamma=0)))
+print("MSE for GD_RMSprop, momentum=0.6:",MSE(y,X@GD_RMSprop(X,y,beta,2000,eta=0.01,gamma=0.9)))
 
 
-print("MSE for GD_Adam",MSE(y,X@GD_ADAM(X,y,beta,2000,eta=3))) 
+print("MSE for GD_Adam",MSE(y,X@GD_ADAM(X,y,beta,2000,eta=5))) 
 
 
-#Tested for different eta, and for Adagrad eta is best at: 5, RMSprop eta = 0.01, Adam eta = 3
-#Tested for different gamma: Adagrad gamma = 0.9, RMSprop gamma = 0.6, none for Adam since momentum is baked into code
+#Tested for different eta, and for Adagrad eta is best at: 5, RMSprop eta = 0.01, Adam eta = 5
+#Tested for different gamma: Adagrad gamma = 0.9, RMSprop gamma = 0.9, none for Adam since momentum is baked into code
+
 """
-
 plotHeatmapSGD()
-
 plothHeatmapSGDepochsbatches()
-
+"""
 """
 momentumSGD()
 """
@@ -291,5 +296,6 @@ print("MSE for Ridge:", MSE(y,X@Ridge(X,y,1e-5)))
 print("R^2 for OLS:", R2(y,X@OLS(X,y)))
 print("R^2 for Ridge:", R2(y,X@Ridge(X,y,1e-5)))
 
-
+"""
 plotGraphs()
+"""
