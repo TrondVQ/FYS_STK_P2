@@ -11,58 +11,30 @@ Add RMSprop and Adam to your library of methods for tuning the learning rate.
 
 Then compare again with : -> Replace thereafter your analytical gradient with either Autograd or JAX
 """
+
+#KUN DRAFT -> BRUKES IKKE
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.special import lmbda
+#from sklearn.preprocessing import StandardScaler
 
-#same as project 1
-def FrankeFunction(x,y, noise = False):
-    term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
-    term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
-    term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
-    term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
-    if noise:
-         return term1 + term2 + term3 + term4  + 0.1 * np.random.randn(*x.shape)
-    else:
-        return term1 + term2 + term3 + term4
-
-# Function to create a design matrix from project 1
-def create_design_matrix(x, y, degree):
-    num_terms = int((degree + 1)*(degree + 2)/2)
-    X = np.zeros((len(x), num_terms))
-    idx = 0
-    for i in range(degree + 1):
-        for j in range(degree + 1 - i):
-            X[:, idx] = (x**i) * (y**j)
-            idx += 1
+def Simple_design_matrix(x,degree):
+    X = np.zeros((len(x[:,0]),degree+1))
+    for i in range(degree+1):
+        X[:,i] = x[:,0]**i
     return X
 
 
-#Generate data same as project 1
-np.random.seed(2024)
-n = 100 #find a good n
-x = np.linspace(0, 1, n)
-y = np.linspace(0, 1, n)
-X, Y = np.meshgrid(x, y)
-z = FrankeFunction(X, Y)
+# Cost functions>  Taken from week 39: Using Autograd with OLS
+def CostOLS(X, y, beta, n): #basiccly mse
+    return (1.0/n) * np.sum((y - X @ beta)**2)
 
-# Flatten the X, Y, and z arrays to turn them into vectors
-x_flat = X.flatten()
-y_flat = Y.flatten()
-z_flat = z.flatten()
+def CostRidge(X, y, beta, lmbda, n):
+    return (1.0/n) * np.sum((y - X @ beta)**2) + lmbda * np.sum(beta**2)
 
-#Create design matrix - usikker her -> degree?
-XY_design = create_design_matrix(x_flat, y_flat, 2)
-
-#Taken from week 39: Using Autograd with OLS
-def CostOLS(beta):
-    return (1.0/n)*np.sum((y-X @ beta)**2)
-
-def CostRidge(beta, lmbda):
-    return (1.0/n)*np.sum((y-X @ beta)**2) + lmbda*np.sum(beta**2)
-
+# Gradient Descent
 def GD (X, y, beta, n = 100, eta = 0.001, ridge = False, momentum = False,  delta_momentum = 0.3, change = 0.0, lmbda = 0.01, Niterations = 100):
     cost = []
+    n_samples = len(y)
     #Momemtum code taken from Week 39: Same code but now with momentum gradient descent
     for iter in range(Niterations):
         if ridge == False: #lin reg
@@ -170,7 +142,7 @@ def Adagrad_SGD(X, y, theta, n = 100, n_epochs=50, batch_size=5, eta=0.01, ridge
 
 #Taken from week 39 - RMSprop for adaptive learning rate with Stochastic Gradient Descent
 #RMSprop_SGD with mini batches and momentum
-def RMSprop_SGD(X, y, theta, n_epochs=100, batch_size=5, eta=0.01, ridge = False,lmbda=0.01, rho=0.99, delta=1e-8, Giter=0.0):
+def RMSprop_SGD(X, y, theta, n = 100,  n_epochs=100, batch_size=5, eta=0.01, ridge = False,lmbda=0.01, rho=0.99, delta=1e-8, Giter=0.0):
     M = batch_size
     m = int(n / M)
     cost = []
@@ -195,7 +167,7 @@ def RMSprop_SGD(X, y, theta, n_epochs=100, batch_size=5, eta=0.01, ridge = False
     return theta, cost
 
 #Taken from week 39 -> And finally ADAM
-def Adam_SGD(X, y, theta, n_epochs=100, batch_size=5, eta=0.01, ridge = False, lmbda = 0.01,  beta1=0.9, beta2=0.999, delta=1e-8,iter=0):
+def Adam_SGD(X, y, theta, n= 100,  n_epochs=100, batch_size=5, eta=0.01, ridge = False, lmbda = 0.01,  beta1=0.9, beta2=0.999, delta=1e-8,iter=0):
     M = batch_size
     m = int(n / M)
     cost = []
@@ -237,19 +209,34 @@ Discuss your results. Recommend seaborn to look at learning rate and lambda.
  
 * Repeat these steps for stochastic gradient descent with mini batches and a given number of epochs. Use a tunable learning rate as discussed in the lectures from weeks 39 and 40. Discuss the results as functions of the various parameters (size of batches, number of epochs etc).* 
 
-* Effect of adagrad
+* Effect of adagrad (Trond
 #Tror ikke vi trenger å se på GD for disse. Kanskje kun SGD med mini-batches.
-* Effect of RMSprop and Adam
+* Effect of RMSprop and Adam (trond
 
 * Replace thereafter your analytical gradient with either Autograd or JAX -> compare results 
 
 
+
 """
 
+np.random.seed(2014)
+n = 100 #number of data points
+x = np.random.rand(n,1) #input
+y = 2 + 3*x + 4*x**2 + 0.1*np.random.randn(n,1) #4x^2 + 3x + 2 + noise
 
-def plot_GD (X, y, beta):
+p = 2 #polynomial degree
+
+X = np.c_[np.ones((n,1)), x]#design matrix
+beta = np.random.randn(2,1) #initialize parameters
+
+#same as project 1
+learning_rates = np.logspace(-4, -1, 4)#learning rates
+lambdas = np.logspace(-4, 0, 5)# lambdas
+
+#Similar to the plot from week 39: Code with a Number of Minibatches which varies, analytical gradient
+# Plotting cost function with different learning rates
+def plot_GD (X, y, beta, eta, lmbda =None):
     beta_linreg = np.linalg.inv(X.T @ X) @ X.T @ y
-    eta = 0.01
     xnew = np.array([[0],[2]])
     xbnew = np.c_[np.ones((2,1)), xnew]
     ypredict = xbnew.dot(beta)
@@ -260,20 +247,21 @@ def plot_GD (X, y, beta):
     plt.axis([0,2.0,0, 15.0])
     plt.xlabel(r'$x$')
     plt.ylabel(r'$y$')
-    plt.title(r'Gradient descent example {}'.format(eta))
+    plot_title = (r'Gradient descent eta={}'.format(eta))
+    if lmbda is not None:
+        plot_title += (r' with Ridge λ={}'.format(lmbda))
+    plt.title(plot_title)
     plt.show()
 
-#Fiks senre -> plotting: heatmap?
-# Test ulik Niterations, n  og learning rate -> se effekten bedre. Diskusjon.
-beta = np.random.randn(2,1)
-print("Plain Gradient Descent: OLS")
-GD(XY_design, z_flat,beta, eta = 0.1)
-GD(XY_design, z_flat,beta, eta = 0.01)
-GD(XY_design, z_flat,beta, eta = 0.001)
-GD(XY_design, z_flat,beta,  eta = 0.0001)
-print("Plain Gradient Descent: Ridge")
-GD(XY_design, z_flat, beta, eta = 0.1, ridge = True)
-GD(XY_design, z_flat, beta,  eta = 0.01, ridge = True)
-GD(XY_design, z_flat, beta,  eta = 0.001, ridge = True)
-GD(XY_design, z_flat, beta,  eta = 0.0001, ridge = True)
 
+print("Plain Gradient Descent: OLS")
+for eta in learning_rates:
+    beta_GD, _ = GD(X, y, beta, eta=eta)
+    plot_GD(X, y, beta_GD, eta)
+"""
+print("Gradient Descent with Ridge: Testing Different Lambda Values")
+for lmbda in lambdas:
+    for eta in learning_rates:
+        beta_GD, _ = GD(X, y, beta, eta=eta, ridge=True, lmbda=lmbda)
+        plot_GD(X, y, beta_GD, eta, lmbda=lmbda)
+"""
