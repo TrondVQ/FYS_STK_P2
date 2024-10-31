@@ -69,8 +69,6 @@ def CostCrossEntropyDer(predictions, targets):
     return -(targets / predictions) + (1 - targets) / (1 - predictions)
 
 # Classes:
-
-# Neural network class
 class NetworkClass:
     def __init__(self, cost_fun, cost_der, network_input_size, layer_output_sizes, activation_funcs, activation_ders):
         self.cost_fun = cost_fun
@@ -78,13 +76,14 @@ class NetworkClass:
         self.layers = []
         self.activation_funcs = activation_funcs
         self.activation_ders = activation_ders
-        # # Architecture check (activate for information about the network architecture)
-        # print("Architecture configuration:")
-        # print("--------------------------")
-        # print("Network input size:", network_input_size)
-        # print("Layer output sizes:", layer_output_sizes)
-        # print("Activation functions:", activation_funcs)
-        # print("Activation derivatives:", activation_ders)
+        
+        # Architecture check
+        print("Architecture configuration:")
+        print("--------------------------")
+        print("Network input size:", network_input_size)
+        print("Layer output sizes:", layer_output_sizes)
+        print("Activation functions:", activation_funcs)
+        print("Activation derivatives:", activation_ders)
 
         input_size = network_input_size
         for i, output_size in enumerate(layer_output_sizes):
@@ -92,15 +91,11 @@ class NetworkClass:
                 'weights': np.random.randn(input_size, output_size) * np.sqrt(2. / input_size),
                 'biases': np.zeros((1, output_size))
             })
-            # print(f"Layer {i+1} weights shape:", self.layers[-1]['weights'].shape)
-            # print(f"Layer {i+1} bias shape:", self.layers[-1]['biases'].shape)
             input_size = output_size
-            
-
 
     def predict(self, inputs):
-        activations = self._feed_forward_saver(inputs)
-        return activations[-1]
+        activations, _, _ = self._feed_forward_saver(inputs)  # Get both activations and zs
+        return activations[-1]  # Return the final activation
 
     def cost(self, inputs, targets):
         predictions = self.predict(inputs)
@@ -108,33 +103,34 @@ class NetworkClass:
 
     def _feed_forward_saver(self, inputs):
         activations = [inputs]
+        zs = []
+        layer_inputs = []  # Store inputs for each layer
+
         for layer in self.layers:
+            layer_inputs.append(activations[-1])  # Save input to the layer
             z = np.dot(activations[-1], layer['weights']) + layer['biases']
             a = self.activation_funcs[len(activations) - 1](z)
+            zs.append(z)
             activations.append(a)
-        #print("activations:", activations)
-        # print("activations input layer shape:", activations[0].shape)
-        # print("activations hidden layer shape:", activations[-2].shape)
-        # print("activations output shape:", activations[-1].shape)
         
-        return activations
+        return activations, zs, layer_inputs  # Return layer inputs as well
 
     def compute_gradient(self, inputs, targets):
-        activations = self._feed_forward_saver(inputs)
-        #print("activations shapes:", [a.shape for a in activations])
+        activations, zs, layer_inputs = self._feed_forward_saver(inputs)
         layer_grads = []
         output = activations[-1]
-        delta = self.cost_der(output, targets) * self.activation_ders[len(self.layers) - 1](output)
+
+        delta = self.cost_der(output, targets) * self.activation_ders[len(self.layers) - 1](zs[-1])
 
         for i in reversed(range(len(self.layers))):
             layer = self.layers[i]
-            prev_activation = activations[i]
+            prev_activation = layer_inputs[i]  # Use layer inputs
             layer_grads.append({
                 'weights': np.dot(prev_activation.T, delta),
                 'biases': np.sum(delta, axis=0, keepdims=True)
             })
             if i > 0:
-                delta = np.dot(delta, layer['weights'].T) * self.activation_ders[i - 1](activations[i])
+                delta = np.dot(delta, layer['weights'].T) * self.activation_ders[i - 1](zs[i - 1])
 
         layer_grads.reverse()
         return layer_grads
