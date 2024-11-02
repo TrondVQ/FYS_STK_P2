@@ -42,22 +42,30 @@ for lmb_value, lr in grid:
         cost_der=mean_squared_error_derivative
     )
 
-    for epoch in range(100):
-        layer_grads = nn_relu.compute_gradient(X_train, y_train)
-        nn_relu.update_weights(layer_grads, lr, lmb_value)
-
+    
+    nn_relu.train(X_train, y_train,epochs=100, batch_size=10, learning_rate=lr, lmbd=lmb_value)    
+    
+    # Predictions
+    predictions_train = nn_relu.predict(X_train)
+    mse_nn_relu_train = mean_squared_error(predictions_train, y_train)
+    R2_nn_relu_train = r2_score(y_train, predictions_train)
     predictions = nn_relu.predict(X_test)
     mse_nn_relu = mean_squared_error(predictions, y_test)
     R2_nn_relu = r2_score(y_test, predictions)
-    results.append((lmb_value, lr, mse_nn_relu, R2_nn_relu))
+    results.append((lmb_value, lr, mse_nn_relu, R2_nn_relu, mse_nn_relu_train, R2_nn_relu_train))
 
 # Convert results to a structured format
-results_array = np.array(results, dtype=[('lambda', 'f8'), ('learning_rate', 'f8'), ('mse', 'f8'), ('R2_nn', 'f8')])
+results_array = np.array(results, dtype=[('lambda', 'f8'), ('learning_rate', 'f8'), ('mse', 'f8'), ('R2_nn', 'f8'), ('mse_nn_relu_train', 'f8'), ('R2_nn_relu_train', 'f8')])
 
 # Reshape the results for heatmap
 mse_values = results_array['mse'].reshape(len(lmb), len(learning_rate))
 R2_values = results_array['R2_nn'].reshape(len(lmb), len(learning_rate))
+#Train data
+mse_min_relu_train = results_array[np.argmin(results_array['mse_nn_relu_train'])]
+R2_max_relu_train = results_array[np.argmax(results_array['R2_nn_relu_train'])]
 
+
+# Test data
 mse_minimum = results_array[np.argmin(results_array['mse'])]
 R2_maximum = results_array[np.argmax(results_array['R2_nn'])]
 
@@ -84,6 +92,15 @@ plt.tight_layout()
 plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Heatmap_ReLU.png')
 plt.show()
 
+
+print("train data: ")
+print("ReLU activation. Best lambda and learning rate with respect to lowest MSE train: ", mse_min_relu_train['lambda'], mse_min_relu_train['learning_rate']) 
+print("Lowest MSE train: ", mse_min_relu_train['mse_nn_relu_train'])
+print("ReLU activation. Best lambda and learning rate with respect to highest R2 train: ", R2_max_relu_train['lambda'], R2_max_relu_train['learning_rate'])
+print("Highest R2 train: ", R2_max_relu_train['R2_nn_relu_train'])
+
+print("test data: ")
+print("------------------------")
 print("ReLU activation. Best lambda and learning rate with respect to lowest MSE: ", mse_minimum['lambda'], mse_minimum['learning_rate'])
 print("Lowest MSE: ", mse_minimum['mse'])
 print("ReLU activation. Best lambda and learning rate with respect to highest R2: ", R2_maximum['lambda'], R2_maximum['learning_rate'])
@@ -111,22 +128,26 @@ for lmb_value, lr in grid:
         cost_der=mean_squared_error_derivative
     )
 
-    for epoch in range(100):
-        layer_grads = nn_leaky.compute_gradient(X_train, y_train)
-        nn_leaky.update_weights(layer_grads, lr, lmb_value)
-
+    nn_leaky.train(X_train, y_train,epochs=100, batch_size=10, learning_rate=lr, lmbd=lmb_value)   
+      
+    # Predictions
+    predictions_train = nn_leaky.predict(X_train)
+    mse_nn_leaky = mean_squared_error(predictions_train, y_train)
+    R2_nn_leaky = r2_score(y_train, predictions_train)
     predictions = nn_leaky.predict(X_test)
     mse_nn_leaky = mean_squared_error(predictions, y_test)
     R2_nn_leaky = r2_score(y_test, predictions)
-    results_leaky.append((lmb_value, lr, mse_nn_leaky, R2_nn_leaky))
+    results_leaky.append((lmb_value, lr, mse_nn_leaky, R2_nn_leaky, mse_nn_leaky, R2_nn_leaky))
 
 # Convert results to a structured format
-results_array_leaky = np.array(results_leaky, dtype=[('lambda', 'f8'), ('learning_rate', 'f8'), ('mse', 'f8'), ('R2_nn', 'f8')])
+results_array_leaky = np.array(results_leaky, dtype=[('lambda', 'f8'), ('learning_rate', 'f8'), ('mse', 'f8'), ('R2_nn', 'f8'), ('mse_nn_train', 'f8'), ('R2_nn_train', 'f8')])
 
 # Reshape the results for heatmap
 mse_values = results_array_leaky['mse'].reshape(len(lmb), len(learning_rate))
 R2_values = results_array_leaky['R2_nn'].reshape(len(lmb), len(learning_rate))
 
+mse_min_train = results_array_leaky[np.argmin(results_array_leaky['mse_nn_train'])]
+R2_max_train = results_array_leaky[np.argmax(results_array_leaky['R2_nn_train'])]
 mse_minimum = results_array[np.argmin(results_array['mse'])]
 R2_maximum = results_array[np.argmax(results_array['R2_nn'])]
 
@@ -152,7 +173,14 @@ axes[1].set_ylabel('Lambda (L2 Regularization)')
 plt.tight_layout()
 plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Heatmap_Leaky_ReLU.png')
 plt.show()
+print("train data: ")
+print("Leaky ReLU activation. Best lambda and learning rate with respect to lowest MSE train: ", mse_min_train['lambda'], mse_min_train['learning_rate']) 
+print("Lowest MSE train: ", mse_min_train['mse_nn_train'])
+print("Leaky ReLU activation. Best lambda and learning rate with respect to highest R2 train: ", R2_max_train['lambda'], R2_max_train['learning_rate'])
+print("Highest R2 train: ", R2_max_train['R2_nn_train'])
 
+print("------------------------")
+print("test data: ")
 print("Leaky ReLU activation. Best lambda and learning rate with respect to lowest MSE: ", mse_minimum['lambda'], mse_minimum['learning_rate'])
 print("Lowest MSE: ", mse_minimum['mse'])
 print("Leaky ReLU activation. Best lambda and learning rate with respect to highest R2: ", R2_maximum['lambda'], R2_maximum['learning_rate'])
