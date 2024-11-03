@@ -127,6 +127,7 @@ targets = y_train
 # Define your hyperparameter ranges
 learning_rate = np.logspace(-3, -1, 10)
 lmb = np.logspace(-5, -1, 10)
+print(lmb)
 
 # Create a grid of parameters
 grid = product(lmb, learning_rate)

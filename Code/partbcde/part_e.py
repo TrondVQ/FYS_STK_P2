@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.datasets import load_breast_cancer
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import SGDClassifier
 
 # Loading breast cancer data
 data = load_breast_cancer()
@@ -37,7 +38,7 @@ results_LR_train = []
 
 for learning_rate, lmb in product(learning_rate_range, lmb_range):
     # Scikit Learn reference model
-    clf = LogisticRegression(C=1.0/lmb, solver='lbfgs', max_iter=100, random_state=1, penalty='l2')
+    clf = SGDClassifier(loss='log_loss', alpha = lmb, learning_rate='constant', eta0=learning_rate, max_iter=100, random_state=1, penalty='l2')
     clf.fit(X_train, y_train)
     predictsci = clf.predict(X_test)
     accuracy_sci_test = accuracy_score(y_test, predictsci)
@@ -46,7 +47,7 @@ for learning_rate, lmb in product(learning_rate_range, lmb_range):
     results_sci.append((learning_rate, lmb, accuracy_sci_test, accuracy_sci_train))
 
     # Own Logistic Regression model
-    LR_classifier = Logisticregr(X_train, y_train, eta=learning_rate, lmbd=lmb, iterations=100)
+    LR_classifier = Logisticregr(X_train, y_train, eta=learning_rate, lmbd=lmb, iterations=100, nbatches=10)
     LR_classifier.SGD(np.zeros(X_train.shape[1]))
 
     # Calculate predictions and accuracy for the test set
@@ -73,37 +74,37 @@ fig, axes = plt.subplots(2, 2, figsize=(15, 12))
 sns.heatmap(accuracy_values_sci_test, annot=True, fmt=".3f",
             xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
-            ax=axes[0, 0], cmap="YlGnBu")
-axes[0, 0].set_title('Scikit-learn Test Accuracy Heatmap')
-axes[0, 0].set_xlabel('Log Lambda (L2 Regularization)')
-axes[0, 0].set_ylabel('Log Learning Rate')
+            ax=axes[0, 1], cmap="YlGnBu")
+axes[0, 1].set_title('Scikit-learn Test Accuracy Heatmap')
+axes[0, 1].set_xlabel('Log Lambda (L2 Regularization)')
+axes[0, 1].set_ylabel('Log Learning Rate')
 
 # Scikit-learn train accuracy heatmap
 sns.heatmap(accuracy_values_sci_train, annot=True, fmt=".3f",
             xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
-            ax=axes[0, 1], cmap="YlGnBu")
-axes[0, 1].set_title('Scikit-learn Train Accuracy Heatmap')
-axes[0, 1].set_xlabel('Log Lambda (L2 Regularization)')
-axes[0, 1].set_ylabel('Log Learning Rate')
+            ax=axes[0, 0], cmap="YlGnBu")
+axes[0, 0].set_title('Scikit-learn Train Accuracy Heatmap')
+axes[0, 0].set_xlabel('Log Lambda (L2 Regularization)')
+axes[0, 0].set_ylabel('Log Learning Rate')
 
 # Own Logistic Regression test accuracy heatmap
 sns.heatmap(accuracy_values_LR_test, annot=True, fmt=".3f",
             xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
-            ax=axes[1, 0], cmap="YlGnBu")
-axes[1, 0].set_title('Own Logistic Regression Test Accuracy Heatmap')
-axes[1, 0].set_xlabel('Log Lambda (L2 Regularization)')
-axes[1, 0].set_ylabel('Log Learning Rate')
+            ax=axes[1, 1], cmap="YlGnBu")
+axes[1, 1].set_title('Own Logistic Regression Test Accuracy Heatmap')
+axes[1, 1].set_xlabel('Log Lambda (L2 Regularization)')
+axes[1, 1].set_ylabel('Log Learning Rate')
 
 # Own Logistic Regression train accuracy heatmap
 sns.heatmap(accuracy_values_LR_train, annot=True, fmt=".3f",
             xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
-            ax=axes[1, 1], cmap="YlGnBu")
-axes[1, 1].set_title('Own Logistic Regression Train Accuracy Heatmap')
-axes[1, 1].set_xlabel('Log Lambda (L2 Regularization)')
-axes[1, 1].set_ylabel('Log Learning Rate')
+            ax=axes[1, 0], cmap="YlGnBu")
+axes[1, 0].set_title('Own Logistic Regression Train Accuracy Heatmap')
+axes[1, 0].set_xlabel('Log Lambda (L2 Regularization)')
+axes[1, 0].set_ylabel('Log Learning Rate')
 
 plt.tight_layout()
 plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Combined_Accuracy_Heatmaps.png')
