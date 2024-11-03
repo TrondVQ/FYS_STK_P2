@@ -35,7 +35,7 @@ results = []
 for lmb_value, lr in grid:
     nn_relu = NetworkClass(
         network_input_size=X_train.shape[1],
-        layer_output_sizes=[5, 1],
+        layer_output_sizes=[50, 1],
         activation_funcs=[ReLU, linear],
         activation_ders=[ReLU_der, linear_derivative],
         cost_fun=mean_squared_error,
@@ -121,7 +121,7 @@ results_leaky = []
 for lmb_value, lr in grid:
     nn_leaky = NetworkClass(
         network_input_size=X_train.shape[1],
-        layer_output_sizes=[5, 1],
+        layer_output_sizes=[50, 1],
         activation_funcs=[leaky_ReLU, linear],
         activation_ders=[der_leaky_ReLU, linear_derivative],
         cost_fun=mean_squared_error,
