@@ -71,40 +71,40 @@ accuracy_values_LR_train = results_LR_train['accuracy'].reshape(len(learning_rat
 fig, axes = plt.subplots(2, 2, figsize=(15, 12))
 
 # Scikit-learn test accuracy heatmap
-sns.heatmap(accuracy_values_sci_test, annot=True, fmt=".3f",
-            xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
-            yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+sns.heatmap(accuracy_values_sci_test.T, annot=True, fmt=".3f",
+            xticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+            yticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             ax=axes[0, 1], cmap="YlGnBu")
-axes[0, 1].set_title('Scikit-learn Test Accuracy Heatmap')
-axes[0, 1].set_xlabel('Log Lambda (L2 Regularization)')
-axes[0, 1].set_ylabel('Log Learning Rate')
+axes[0, 1].set_title('Test Accuracy Heatmap for Scikit-learn Logistic Regression (SGDClassifier)')
+axes[0, 1].set_xlabel('Log Learning Rate')
+axes[0, 1].set_ylabel('Log Lambda (L2 Regularization)')
 
 # Scikit-learn train accuracy heatmap
-sns.heatmap(accuracy_values_sci_train, annot=True, fmt=".3f",
-            xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
-            yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+sns.heatmap(accuracy_values_sci_train.T, annot=True, fmt=".3f",
+            xticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+            yticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             ax=axes[0, 0], cmap="YlGnBu")
-axes[0, 0].set_title('Scikit-learn Train Accuracy Heatmap')
-axes[0, 0].set_xlabel('Log Lambda (L2 Regularization)')
-axes[0, 0].set_ylabel('Log Learning Rate')
+axes[0, 0].set_title('Training Accuracy Heatmap for Scikit-learn Logistic Regression (SGDClassifier)')
+axes[0, 0].set_xlabel('Log Learning Rate')
+axes[0, 0].set_ylabel('Log Lambda (L2 Regularization)')
 
 # Own Logistic Regression test accuracy heatmap
-sns.heatmap(accuracy_values_LR_test, annot=True, fmt=".3f",
-            xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
-            yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+sns.heatmap(accuracy_values_LR_test.T, annot=True, fmt=".3f",
+            xticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+            yticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             ax=axes[1, 1], cmap="YlGnBu")
-axes[1, 1].set_title('Own Logistic Regression Test Accuracy Heatmap')
-axes[1, 1].set_xlabel('Log Lambda (L2 Regularization)')
-axes[1, 1].set_ylabel('Log Learning Rate')
+axes[1, 1].set_title('Test Accuracy Heatmap for Custom Logistic Regression')
+axes[1, 1].set_xlabel('Log Learning Rate')
+axes[1, 1].set_ylabel('Log Lambda (L2 Regularization)')
 
 # Own Logistic Regression train accuracy heatmap
-sns.heatmap(accuracy_values_LR_train, annot=True, fmt=".3f",
-            xticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
-            yticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+sns.heatmap(accuracy_values_LR_train.T, annot=True, fmt=".3f",
+            xticklabels=[f"{np.log10(lr):.2f}" for lr in learning_rate_range],
+            yticklabels=[f"{np.log10(lmb):.2f}" for lmb in lmb_range],
             ax=axes[1, 0], cmap="YlGnBu")
-axes[1, 0].set_title('Own Logistic Regression Train Accuracy Heatmap')
-axes[1, 0].set_xlabel('Log Lambda (L2 Regularization)')
-axes[1, 0].set_ylabel('Log Learning Rate')
+axes[1, 0].set_title('Training Accuracy Heatmap for Custom Logistic Regression')
+axes[1, 0].set_xlabel('Log Learning Rate')
+axes[1, 0].set_ylabel('Log Lambda (L2 Regularization)')
 
 plt.tight_layout()
 plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Combined_Accuracy_Heatmaps.png')
