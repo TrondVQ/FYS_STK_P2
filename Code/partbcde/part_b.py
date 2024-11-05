@@ -48,8 +48,8 @@ results_sci = []
 # Loop through all combinations of lmb and learning_rate
 for lmb_value, lr in grid: 
     # Reset the neural network for each combination
-    scikitMLP = MLPRegressor(alpha=lmb_value, activation='identity', hidden_layer_sizes=[5],
-                             learning_rate_init=lr, random_state=1, max_iter=100)
+    scikitMLP = MLPRegressor(alpha=lmb_value, activation='logistic', hidden_layer_sizes=[50],
+                             learning_rate_init=lr, random_state=1, max_iter=100, batch_size=10)
     
     # Fit the model
     scikitMLP.fit(X_train, y_train.ravel())
@@ -104,7 +104,7 @@ fig, axes = plt.subplots(1, 2, figsize=(20, 6))
 sns.heatmap(mse_sci_values, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[0])
-axes[0].set_title('Mean Squared Error Heatmap (Scikit-learn)')
+axes[0].set_title('Test MSE Heatmap (Scikit-learn)')
 axes[0].set_xlabel('Learning Rate')
 axes[0].set_ylabel('Lambda (L2 Regularization)')
 
@@ -112,7 +112,7 @@ axes[0].set_ylabel('Lambda (L2 Regularization)')
 sns.heatmap(R2_sci_values, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[1])
-axes[1].set_title('R2 Score Heatmap (Scikit-learn)')
+axes[1].set_title('Test $R^2$ Heatmap (Scikit-learn)')
 axes[1].set_xlabel('Learning Rate')
 axes[1].set_ylabel('Lambda (L2 Regularization)')
 
@@ -182,7 +182,7 @@ fig, axes = plt.subplots(1, 2, figsize=(20, 6))
 sns.heatmap(mse_values, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[0])
-axes[0].set_title('Mean Squared Error Heatmap (Custom NN with Sigmoid)')
+axes[0].set_title('Test MSE Heatmap (Custom NN with Sigmoid)')
 axes[0].set_xlabel('Learning Rate')
 axes[0].set_ylabel('Lambda (L2 Regularization)')
 
@@ -190,7 +190,7 @@ axes[0].set_ylabel('Lambda (L2 Regularization)')
 sns.heatmap(R2_values, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[1])
-axes[1].set_title('R2 Score Heatmap (Custom NN with Sigmoid)')
+axes[1].set_title('Test $R^2$ Heatmap (Custom NN with Sigmoid)')
 axes[1].set_xlabel('Learning Rate')
 axes[1].set_ylabel('Lambda (L2 Regularization)')
 

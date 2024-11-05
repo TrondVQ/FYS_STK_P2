@@ -13,6 +13,7 @@ from sklearn.neural_network import MLPClassifier
 data = load_breast_cancer()
 X = data.data
 y = data.target
+print(X.shape)
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -82,7 +83,7 @@ sns.heatmap(accuracy_values_sci_train, annot=True, fmt=".3f",
             xticklabels=[f"{lr:.2e}" for lr in learning_rate_range],
             yticklabels=[f"{lmb:.2e}" for lmb in lmb_range],
             cmap="YlGnBu", ax=axes[0, 0])  
-axes[0, 0].set_title('Train Accuracy Heatmap (Scikit-learn MLP classifier)')
+axes[0, 0].set_title('Train Accuracy Heatmap (Scikit-learn MLP classifier with adam)')
 axes[0, 0].set_xlabel('Learning Rate')
 axes[0, 0].set_ylabel('Lambda (L2 Regularization)')
 
@@ -91,7 +92,7 @@ sns.heatmap(accuracy_values_sci_test, annot=True, fmt=".3f",
             xticklabels=[f"{lr:.2e}" for lr in learning_rate_range],
             yticklabels=[f"{lmb:.2e}" for lmb in lmb_range],
             cmap="YlGnBu", ax=axes[0, 1])  
-axes[0, 1].set_title('Test Accuracy Heatmap (Scikit-learn MLP classifier)')
+axes[0, 1].set_title('Test Accuracy Heatmap (Scikit-learn MLP classifier with adam)')
 axes[0, 1].set_xlabel('Learning Rate')
 axes[0, 1].set_ylabel('Lambda (L2 Regularization)')
 
@@ -100,7 +101,7 @@ sns.heatmap(accuracy_values_nn_train, annot=True, fmt=".3f",
             xticklabels=[f"{lr:.2e}" for lr in learning_rate_range],
             yticklabels=[f"{lmb:.2e}" for lmb in lmb_range],
             cmap="YlGnBu", ax=axes[1, 0])  
-axes[1, 0].set_title('Train Accuracy Heatmap (Custom NN)')
+axes[1, 0].set_title('Train Accuracy Heatmap (Custom NN with SGD)')
 axes[1, 0].set_xlabel('Learning Rate')
 axes[1, 0].set_ylabel('Lambda (L2 Regularization)')
 
@@ -109,10 +110,11 @@ sns.heatmap(accuracy_values_nn_test, annot=True, fmt=".3f",
             xticklabels=[f"{lr:.2e}" for lr in learning_rate_range],
             yticklabels=[f"{lmb:.2e}" for lmb in lmb_range],
             cmap="YlGnBu", ax=axes[1, 1])  
-axes[1, 1].set_title('Test Accuracy Heatmap (Custom NN)')
+axes[1, 1].set_title('Test Accuracy Heatmap (Custom NN SGD)')
 axes[1, 1].set_xlabel('Learning Rate')
 axes[1, 1].set_ylabel('Lambda (L2 Regularization)')
 
 plt.tight_layout()
 plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Heatmap_Combined.png')
 plt.show()
+print()
