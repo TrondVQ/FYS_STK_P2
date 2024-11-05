@@ -80,7 +80,7 @@ fig, axes = plt.subplots(1, 2, figsize=(20, 6))
 sns.heatmap(mse_values, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[0])
-axes[0].set_title('Mean Squared Error Heatmap (Custom NN with ReLU)')
+axes[0].set_title('Test MSE Heatmap (Custom NN with ReLU)')
 axes[0].set_xlabel('Learning Rate')
 axes[0].set_ylabel('Lambda (L2 Regularization)')
 
@@ -88,7 +88,7 @@ axes[0].set_ylabel('Lambda (L2 Regularization)')
 sns.heatmap(R2_values, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[1])
-axes[1].set_title('R2 Score Heatmap (Custom NN with ReLU)')
+axes[1].set_title('Test $R^2$ Heatmap (Custom NN with ReLU)')
 axes[1].set_xlabel('Learning Rate')
 axes[1].set_ylabel('Lambda (L2 Regularization)')
 
@@ -162,7 +162,7 @@ fig, axes = plt.subplots(1, 2, figsize=(20, 6))
 sns.heatmap(mse_values_leaky, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[0])
-axes[0].set_title('Mean Squared Error Heatmap (Custom NN with leaky ReLU)')
+axes[0].set_title('Test MSE Heatmap (Custom NN with leaky ReLU)')
 axes[0].set_xlabel('Learning Rate')
 axes[0].set_ylabel('Lambda (L2 Regularization)')
 
@@ -170,7 +170,7 @@ axes[0].set_ylabel('Lambda (L2 Regularization)')
 sns.heatmap(R2_values_leaky, annot=True, fmt=".4f", cmap="YlGnBu", 
             xticklabels=[f"{lr:.4f}" for lr in learning_rate], 
             yticklabels=[f"{lmb_val:.4f}" for lmb_val in lmb], ax=axes[1])
-axes[1].set_title('R2 Score Heatmap (Custom NN with leaky ReLU)')
+axes[1].set_title('Test $R^2$ Heatmap (Custom NN with leaky ReLU)')
 axes[1].set_xlabel('Learning Rate')
 axes[1].set_ylabel('Lambda (L2 Regularization)')
 

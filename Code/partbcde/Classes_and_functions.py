@@ -176,6 +176,16 @@ class Logisticregr:
 
     def sigmoid(self, X):
         return 1 / (1 + np.exp(-X))
+    
+    def predict(self, X):
+        return self.sigmoid(X @ self.beta_l)
+
+    def predict_class(self, X, threshold=0.5):
+        return self.predict(X) >= threshold
+
+    def accuracy(self, X, y):
+        y_pred = self.predict_class(X)
+        return np.mean(y_pred == y)
 
     # Stochastic gradient descent from a) with some modifications. 
     def SGD(self, betainit=None):
@@ -215,15 +225,7 @@ class Logisticregr:
         self.beta_l = beta
         return beta
 
-    def predict(self, X):
-        return self.sigmoid(X @ self.beta_l)
-
-    def predict_class(self, X, threshold=0.5):
-        return self.predict(X) >= threshold
-
-    def accuracy(self, X, y):
-        y_pred = self.predict_class(X)
-        return np.mean(y_pred == y)
+ 
     
 
 
