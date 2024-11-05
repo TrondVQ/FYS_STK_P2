@@ -13,9 +13,9 @@ To set up the project locally, follow these steps:
 
 2. **Install the required dependencies:**
     ```sh
-    pip install numpy matplotlib scikit-learn imageio seaborn
+    pip install numpy matplotlib scikit-learn imageio seaborn autograd
     if python3 run:
-    pip3 install numpy matplotlib scikit-learn imageio seaborn
+    pip3 install numpy matplotlib scikit-learn imageio seaborn autograd
     ```
 
 ### Project Structure
