@@ -1,4 +1,4 @@
-# FYS_STK_project1
+# FYS_STK_P2
 
 ## FYS-STK4155 - Applied Data Analysis and Machine Learning - Autumn 2024
 
