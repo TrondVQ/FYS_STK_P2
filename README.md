@@ -1,2 +1,25 @@
-# FYS-STK4155 - Applied Data Analysis and Machine Learning - Autumn 2024
-Project 2 in the course FYS-STK4155
+# FYS_STK_project1
+
+## FYS-STK4155 - Applied Data Analysis and Machine Learning - Autumn 2024
+
+### Installation
+To set up the project locally, follow these steps:
+
+1. **Clone the repository:**
+    ```sh
+    git clone https://github.com/TrondVQ/FYS_STK_P2
+    cd FYS_STK_P2
+    ```
+
+2. **Install the required dependencies:**
+    ```sh
+    pip install numpy matplotlib scikit-learn imageio seaborn
+    if python3 run:
+    pip3 install numpy matplotlib scikit-learn imageio seaborn
+    ```
+
+### Project Structure
+- **Code/**: Contains the final Python code for exercises a)-e).
+- **Plots**: Contains the figures obtained from running the code.
+- **Supplemental material/**: Contains GPT chat files and some leftover code.
+
