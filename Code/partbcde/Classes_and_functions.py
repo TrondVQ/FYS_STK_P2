@@ -68,7 +68,6 @@ def CostCrossEntropyDer(predictions, targets):
     predictions = np.clip(predictions, 1e-10, 1 - 1e-10)  
     return -(targets / predictions) + (1 - targets) / (1 - predictions)
 
-# Classes:
 class NetworkClass:
     def __init__(self, cost_fun, cost_der, network_input_size, layer_output_sizes, activation_funcs, activation_ders):
         self.cost_fun = cost_fun
@@ -78,12 +77,12 @@ class NetworkClass:
         self.activation_ders = activation_ders
         
         # Architecture check
-        print("Architecture configuration:")
-        print("--------------------------")
-        print("Network input size:", network_input_size)
-        print("Layer output sizes:", layer_output_sizes)
-        print("Activation functions:", activation_funcs)
-        print("Activation derivatives:", activation_ders)
+        # print("Architecture configuration:")
+        # print("--------------------------")
+        # print("Network input size:", network_input_size)
+        # print("Layer output sizes:", layer_output_sizes)
+        # print("Activation functions:", activation_funcs)
+        # print("Activation derivatives:", activation_ders)
 
         input_size = network_input_size
         for i, output_size in enumerate(layer_output_sizes):
@@ -94,7 +93,7 @@ class NetworkClass:
             input_size = output_size
 
     def predict(self, inputs):
-        activations, _, _ = self._feed_forward_saver(inputs)  # Get both activations and zs
+        activations, _, _ = self._feed_forward_saver(inputs)
         return activations[-1]  # Return the final activation
 
     def cost(self, inputs, targets):
@@ -104,16 +103,16 @@ class NetworkClass:
     def _feed_forward_saver(self, inputs):
         activations = [inputs]
         zs = []
-        layer_inputs = []  # Store inputs for each layer
+        layer_inputs = []
 
         for layer in self.layers:
-            layer_inputs.append(activations[-1])  # Save input to the layer
+            layer_inputs.append(activations[-1])
             z = np.dot(activations[-1], layer['weights']) + layer['biases']
             a = self.activation_funcs[len(activations) - 1](z)
             zs.append(z)
             activations.append(a)
         
-        return activations, zs, layer_inputs  # Return layer inputs as well
+        return activations, zs, layer_inputs
 
     def compute_gradient(self, inputs, targets):
         activations, zs, layer_inputs = self._feed_forward_saver(inputs)
@@ -124,7 +123,7 @@ class NetworkClass:
 
         for i in reversed(range(len(self.layers))):
             layer = self.layers[i]
-            prev_activation = layer_inputs[i]  # Use layer inputs
+            prev_activation = layer_inputs[i]
             layer_grads.append({
                 'weights': np.dot(prev_activation.T, delta),
                 'biases': np.sum(delta, axis=0, keepdims=True)
@@ -139,6 +138,27 @@ class NetworkClass:
         for i, layer in enumerate(self.layers):
             layer['weights'] -= learning_rate * (layer_grads[i]['weights'] + lmbd * layer['weights'])
             layer['biases'] -= learning_rate * layer_grads[i]['biases']
+
+    def train(self, X, y, epochs, batch_size, learning_rate, lmbd):
+        for epoch in range(epochs):
+            # Shuffle data
+            indices = np.arange(X.shape[0])
+            np.random.shuffle(indices)
+            X_shuffled = X[indices]
+            y_shuffled = y[indices]
+
+            # Mini-batch training
+            for start in range(0, X.shape[0], batch_size):
+                end = min(start + batch_size, X.shape[0])
+                X_batch = X_shuffled[start:end]
+                y_batch = y_shuffled[start:end]
+
+                layer_grads = self.compute_gradient(X_batch, y_batch)
+                self.update_weights(layer_grads, learning_rate, lmbd)
+
+            # Optional: Print cost at the end of each epoch
+            epoch_cost = self.cost(X, y)
+            #print(f"Epoch {epoch + 1}/{epochs}, Cost: {epoch_cost}")
 
 
 
@@ -205,4 +225,5 @@ class Logisticregr:
         y_pred = self.predict_class(X)
         return np.mean(y_pred == y)
     
+
 

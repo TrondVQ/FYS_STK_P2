@@ -26,8 +26,8 @@ results_nn = []
 
 # Train Scikit-learn model
 for learning_rate, lmb in product(learning_rate_range, lmb_range):
-    clf = MLPClassifier(learning_rate_init=learning_rate, solver='adam', alpha=lmb, activation='logistic',
-                        hidden_layer_sizes=(50), random_state=1, max_iter=100)
+    clf = MLPClassifier(learning_rate_init=learning_rate, solver='adam', alpha=lmb, activation='relu',
+                        hidden_layer_sizes=(50, 20, 10, 30, 40), random_state=1, max_iter=100)
     clf.fit(X_train, y_train)
     
     # Accuracy on test data
@@ -42,14 +42,14 @@ for learning_rate, lmb in product(learning_rate_range, lmb_range):
 
     # Neural Network model
     nn_classifier = NetworkClass(network_input_size=30,
-                                  layer_output_sizes=[50, 1],
-                                  activation_funcs=[sigmoid, sigmoid],
-                                  activation_ders=[sigmoid_derivative, sigmoid_derivative],
+                                  layer_output_sizes=[50,20,10,30,40, 1],
+                                  activation_funcs=[ReLU,ReLU,ReLU,ReLU,ReLU, sigmoid],
+                                  activation_ders=[ReLU_der,ReLU_der,ReLU_der,ReLU_der,ReLU_der, sigmoid_derivative],
                                   cost_fun=CostCrossEntropy,
                                   cost_der=CostCrossEntropyDer)
 
     inputs = X_train
-    targets = y_train.reshape(-1, 1)
+    targets = y_train.reshape(-1, 1)2
     
     nn_classifier.train(inputs, targets, epochs=100, batch_size=10, learning_rate=learning_rate, lmbd=lmb)   
 
@@ -91,7 +91,7 @@ sns.heatmap(accuracy_values_sci_test, annot=True, fmt=".3f",
             xticklabels=[f"{lr:.2e}" for lr in learning_rate_range],
             yticklabels=[f"{lmb:.2e}" for lmb in lmb_range],
             cmap="YlGnBu", ax=axes[0, 1])  
-axes[0, 1].set_title('Test Accuracy Heatmap (Scikit-learn MLP classifier)')
+axes[0, 1].set_title('Test Accuracy Heatmap (Scikit-learn MLP classifier)') 
 axes[0, 1].set_xlabel('Learning Rate')
 axes[0, 1].set_ylabel('Lambda (L2 Regularization)')
 
@@ -114,5 +114,5 @@ axes[1, 1].set_xlabel('Learning Rate')
 axes[1, 1].set_ylabel('Lambda (L2 Regularization)')
 
 plt.tight_layout()
-plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Heatmap_Combined.png')
+plt.savefig(r'G:\My Drive\UIO\Subjects\FYS-STK4155\Oppgaver\Projects\Project 2\Figures\Heatmap_Combined_moreLayers.png')
 plt.show()
