@@ -21,5 +21,5 @@ To set up the project locally, follow these steps:
 ### Project Structure
 - **Code/**: Contains the final Python code for exercises a)-e).
 - **Plots**: Contains the figures obtained from running the code.
-- **Supplemental material/**: Contains GPT chat files and some leftover code.
+- **Supplemental material/**: Contains GPT chat files and verification code of the classes and functions used in the analysis.
 
